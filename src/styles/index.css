@@ -1,0 +1,184 @@
+@import "tailwindcss";
+@import "@fontsource-variable/source-sans-3";
+@import "@fontsource-variable/bricolage-grotesque";
+@import "@fontsource-variable/geist-mono";
+
+/* ---------- Tokens de diseño ---------- */
+:root {
+  color-scheme: light;
+  --bg: oklch(0.985 0.004 90);
+  --surface: oklch(1 0 0);
+  --fg: oklch(0.2 0.01 90);
+  --muted: oklch(0.48 0.01 90);
+  --border: oklch(0.9 0.006 90);
+  --accent: oklch(0.75 0.16 60);
+  --accent-fg: oklch(0.2 0.03 60);
+  --accent-text: oklch(0.5 0.14 50);
+  --chart-found: #0072b2; /* Okabe-Ito azul */
+  --chart-lost: #d55e00; /* Okabe-Ito bermellón */
+  --grid-line: oklch(0.2 0.01 90 / 0.06);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: oklch(0.16 0.006 260);
+  --surface: oklch(0.2 0.008 260);
+  --fg: oklch(0.96 0.004 90);
+  --muted: oklch(0.72 0.01 260);
+  --border: oklch(0.3 0.01 260);
+  --accent: oklch(0.8 0.15 65);
+  --accent-fg: oklch(0.2 0.03 60);
+  --accent-text: oklch(0.82 0.14 65);
+  --chart-found: #56b4e9; /* Okabe-Ito celeste */
+  --chart-lost: #e69f00; /* Okabe-Ito naranja */
+  --grid-line: oklch(1 0 0 / 0.06);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: oklch(0.16 0.006 260);
+    --surface: oklch(0.2 0.008 260);
+    --fg: oklch(0.96 0.004 90);
+    --muted: oklch(0.72 0.01 260);
+    --border: oklch(0.3 0.01 260);
+    --accent: oklch(0.8 0.15 65);
+    --accent-fg: oklch(0.2 0.03 60);
+    --accent-text: oklch(0.82 0.14 65);
+    --chart-found: #56b4e9;
+    --chart-lost: #e69f00;
+    --grid-line: oklch(1 0 0 / 0.06);
+  }
+}
+
+@theme inline {
+  --font-display: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
+  --radius-control: 0px;
+  --radius-card: 0px;
+  --font-sans: "Source Sans 3 Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, monospace;
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-text: var(--accent-text);
+}
+
+/* ---------- Base ---------- */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Fuente display (Bricolage Grotesque) en títulos grandes (h1, h2). Los h3 quedan en sans. */
+h1,
+h2,
+.font-display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 3px;
+  border-radius: 0;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+
+/* ---------- Utilidades visuales ---------- */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 30%, transparent 100%);
+}
+
+.text-gradient {
+  background: linear-gradient(120deg, var(--fg) 30%, var(--accent-text));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---------- Animaciones (todas opt-in por componente) ---------- */
+@keyframes radar-sweep {
+  to { transform: rotate(360deg); }
+}
+@keyframes radar-ping {
+  0% { transform: scale(0.6); opacity: 0.7; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+@keyframes float-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes radar-ripple {
+  0% { transform: scale(0.1); opacity: 0.55; }
+  100% { transform: scale(1); opacity: 0; }
+}
+@keyframes radar-spin-reverse {
+  to { transform: rotate(-360deg); }
+}
+@keyframes radar-hit {
+  0% { opacity: 1; transform: scale(2.2); }
+  8% { transform: scale(1); }
+  100% { opacity: 0.12; transform: scale(1); }
+}
+@keyframes radar-label {
+  0% { opacity: 1; transform: translateY(0); }
+  55% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(4px); }
+}
+@keyframes radar-lock {
+  0% { opacity: 1; transform: scale(2.6); }
+  12% { transform: scale(1); }
+  100% { opacity: 0; transform: scale(1); }
+}
+
+/* Periodo del barrido: debe coincidir con SWEEP_SECONDS en radar.tsx */
+.radar-sweep { animation: radar-sweep 6s linear infinite; }
+.radar-ripple { animation: radar-ripple 4.5s ease-out infinite; }
+.radar-spin-reverse { animation: radar-spin-reverse 60s linear infinite; }
+.radar-hit { animation: radar-hit 6s linear infinite; }
+.radar-label { animation: radar-label 6s linear infinite; }
+.radar-lock { animation: radar-lock 6s linear infinite; }
+.radar-ping { animation: radar-ping 2.4s ease-out infinite; }
+.marquee-track { animation: marquee 40s linear infinite; }
+.marquee:hover .marquee-track,
+.marquee:focus-within .marquee-track { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .radar-sweep,
+  .radar-ripple,
+  .radar-spin-reverse,
+  .radar-hit,
+  .radar-label,
+  .radar-lock,
+  .radar-ping,
+  .marquee-track { animation: none; }
+  .radar-ripple,
+  .radar-lock { opacity: 0; }
+  .radar-hit,
+  .radar-label { opacity: 1; }
+}

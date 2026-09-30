@@ -1,0 +1,39 @@
+# Render Blueprint: sitio estático (SPA) de prueba.
+# Se ejecuta desde la raíz del repositorio. En Render: New > Blueprint, y en
+# "Blueprint file path" indicar: deploy/render/render.yaml
+services:
+  - type: web
+    runtime: static
+    name: foundit-web-app
+    branch: develop # cambiar a main cuando se estabilice
+    autoDeployTrigger: commit
+    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm build
+    staticPublishPath: dist
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+
+    # SPA: cualquier ruta sirve index.html (necesario cuando exista router en cliente).
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+    headers:
+      # Los archivos de /assets llevan hash en el nombre: se pueden cachear para siempre.
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      # El HTML nunca se cachea, para que cada despliegue se vea de inmediato.
+      - path: /index.html
+        name: Cache-Control
+        value: no-cache
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin

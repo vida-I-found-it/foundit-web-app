@@ -7,7 +7,9 @@ services:
     name: foundit-web-app
     branch: develop # cambiar a main cuando se estabilice
     autoDeployTrigger: commit
-    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm build
+    # pnpm ya viene instalado en Render (/usr/bin/pnpm, solo lectura): no usar `corepack enable`.
+    # pnpm lee "packageManager" de package.json y cambia solo a la versión 11.18.0.
+    buildCommand: pnpm install --frozen-lockfile && pnpm build
     staticPublishPath: dist
     envVars:
       - key: NODE_VERSION

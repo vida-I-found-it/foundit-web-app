@@ -1,6 +1,19 @@
-# i-found-it-app
+# Vida lo encontre! ( i-found-it-app )
 
 SPA de visualización de datos para comparar precios de productos y servicios a lo largo del tiempo y detectar ofertas. Dashboard minimalista, accesible y rápido.
+
+## Vista previa
+
+Demo del landing (datos ficticios):
+
+![Hero del landing con el radar de ofertas](docs/landing-hero.png)
+
+<details>
+<summary>Ver la página completa</summary>
+
+![Landing completo](docs/landing-full.png)
+
+</details>
 
 ## Arquitectura del proyecto
 

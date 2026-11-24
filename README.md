@@ -68,6 +68,18 @@ src/
   test/         # setup y helpers de pruebas
 ```
 
+### Dos zonas: landing y board
+
+- **Landing** (`src/features/landing/`): página de presentación. Su botón «Ir al board» lleva al board.
+- **Board** (`src/app/board/`): la aplicación, con su propio layout (cabecera y navegación). Todos los features de producto viven aquí.
+- Hoy el ruteo es por hash (`#/` landing, `#/board/...` board) y está aislado en `src/lib/paths.ts` y `src/app/board/router.ts`. Pasar a un router real (el stack lo prevé) solo cambia esos dos módulos y `App.tsx`.
+
+### Cómo agregar un feature (3 pasos)
+
+1. Crear `src/features/<feature>/` con un `index.ts` que exporte la pantalla (`api/`, `components/`, `messages.ts`, `model.ts` según haga falta; ver `src/features/alerts/`).
+2. Registrarlo en **un solo lugar**: `src/app/board/features.ts`, añadiendo un objeto a `boardFeatures` (`id`, `label`, `icon`, `path` y `component` cargado con `lazy`). La navegación y la ruta salen de ahí; usa `status: "soon"` para una entrada deshabilitada «Próximamente».
+3. Construir la pantalla con los componentes compartidos de `src/components/` (`ui/`: `Button`, `Dialog`, `ErrorBanner`, `Notice`, `RepeatableField`, `TextAreaField`; `layout/`: `PageHeader`, `SkipLink`). Si un componente de tu feature resulta genérico, muévelo ahí. Los textos van en un `messages.ts` del feature, listo para i18n, y los tests en `tests/<feature>/`.
+
 ### Reglas
 
 - Un *feature* no importa de otro *feature*. Solo importa de `components/` y `lib/`. El linter lo hace cumplir.

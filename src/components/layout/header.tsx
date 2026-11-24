@@ -1,5 +1,6 @@
 import { Search } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button";
+import { boardHref } from "@/lib/paths";
 import { ThemeToggle } from "./theme-toggle";
 
 const links = [
@@ -27,8 +28,8 @@ export function Header() {
         </nav>
         <div className="flex items-center gap-2">
           <ThemeToggle />
-          <ButtonLink href="#cta" size="sm">
-            Empezar
+          <ButtonLink href={boardHref()} size="sm">
+            Ir al board
           </ButtonLink>
         </div>
       </div>

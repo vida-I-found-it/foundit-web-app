@@ -1,6 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { ButtonLink } from "@/components/ui/button";
+import { boardHref } from "@/lib/paths";
 
 export function Cta() {
   return (
@@ -19,7 +20,7 @@ export function Cta() {
             ¿Listo para pagar menos?
           </h2>
           <p className="mx-auto mt-4 max-w-md text-muted">Sigue un producto o servicio y te avisamos cuando su precio baje.</p>
-          <ButtonLink href="#top" size="md" className="mt-8">
+          <ButtonLink href={boardHref()} size="md" className="mt-8">
             Empezar a seguir precios <ArrowRight className="size-4" aria-hidden />
           </ButtonLink>
         </div>

@@ -12,12 +12,14 @@ describe("board", () => {
     expect(screen.getByRole("link", { name: "Crear alerta" })).toHaveAttribute("aria-current", "page");
   });
 
-  it("los features «próximamente» aparecen deshabilitados y sin enlace", () => {
+  // US-07-06-AC15: «Alertas» dejó de ser «próximamente»; ahora es un enlace activo del board.
+  it("la entrada «Alertas» está activa y enlaza a la consulta de alertas (US-07-06-AC15)", () => {
     render(<Board path="/alerts/new" />);
-    const soon = boardFeatures.filter((f) => f.status === "soon");
-    expect(soon.length).toBeGreaterThan(0);
-    expect(screen.queryByRole("link", { name: /^Alertas/ })).not.toBeInTheDocument();
-    expect(screen.getByText("Alertas").closest("[aria-disabled='true']")).not.toBeNull();
+    const alerts = boardFeatures.find((f) => f.label === "Alertas");
+    expect(alerts?.status).toBe("ready");
+    const link = screen.getByRole("link", { name: /^Alertas/ });
+    expect(link).toHaveAttribute("href", "#/board/alerts");
+    expect(link.closest("[aria-disabled='true']")).toBeNull();
   });
 
   it("una ruta desconocida muestra «Página no encontrada»", () => {

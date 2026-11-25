@@ -1,11 +1,12 @@
-import { CheckCircle2, Link as LinkIcon, Lock, Mail, Search } from "lucide-react";
+import { CheckCircle2, Clock, Link as LinkIcon, Lock, Mail, Search } from "lucide-react";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 import { PageHeader } from "@/components/layout/page-header";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonLink } from "@/components/ui/button";
 import { ErrorBanner } from "@/components/ui/error-banner";
 import { Notice } from "@/components/ui/notice";
 import { RepeatableField, type RepeatableRow } from "@/components/ui/repeatable-field";
 import { TextAreaField } from "@/components/ui/text-area-field";
+import { boardHref } from "@/lib/paths";
 import { type CreatedAlert, createAlert } from "./api/alerts-client";
 import { mapApiError } from "./api/map-api-error";
 import { ConfirmDialog } from "./components/confirm-dialog";
@@ -131,12 +132,24 @@ export function CreateAlertPage() {
             <p className="mt-2">{t.success.lead(created.alert.urls.length)}</p>
             {/* US-02-05-AC1: el correo solo se muestra enmascarado. */}
             <p className="mt-1 break-words">{t.success.notify(created.masked)}</p>
+            {/* US-03-05-AC1/AC3: aviso fijo en todo éxito (también si `schedule` falló); role="status" no roba el foco del título. */}
+            <div className="mt-4">
+              <Notice icon={Clock} role="status">
+                {t.success.background}
+              </Notice>
+            </div>
             <p className="mt-3 font-mono text-xs text-muted">
               {t.success.reference}: {created.alert.id}
             </p>
-            <Button className="mt-6" onClick={startOver}>
-              {t.success.another}
-            </Button>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Button variant="outline" onClick={startOver}>
+                {t.success.another}
+              </Button>
+              {/* US-07-06-AC16: enlace al detalle con el número real; al ser un enlace, un doble clic no abre dos vistas. */}
+              <ButtonLink href={boardHref(`/alerts/${encodeURIComponent(String(created.alert.id))}`)}>
+                {t.success.view}
+              </ButtonLink>
+            </div>
           </section>
         ) : (
           <form noValidate onSubmit={handleSubmit} aria-labelledby="form-title" className="space-y-6">

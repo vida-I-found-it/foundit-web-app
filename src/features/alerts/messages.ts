@@ -37,6 +37,31 @@ export const alertMessages = {
     label: "Nota (opcional)",
     count: (n: number, max: number) => `${n} de ${max}`,
   },
+  /** US-07-06: consultar una alerta por su número. */
+  lookup: {
+    title: "Consultar alerta",
+    intro: "Escribe el número de tu alerta para ver sus páginas, su estado y los correos que avisaremos.",
+    field: "Número de alerta",
+    submit: "Consultar",
+    required: "Escribe el número de la alerta.",
+    loading: "Cargando la alerta…",
+    notFound: "La alerta no existe.",
+    invalid: "El número no es válido. Escribe un número entero entre 1 y 2147483647.",
+    offline: "No pudimos conectar con el servidor. Revisa tu conexión e inténtalo de nuevo.",
+    server: "No pudimos consultar la alerta por un error del servidor. Inténtalo de nuevo.",
+    retry: "Reintentar",
+    statusLabel: { active: "Activa", inactive: "Inactiva" },
+    subscriptionLabel: { active: "Activa", unsubscribed: "Dada de baja" },
+    detail: {
+      title: (id: number) => `Alerta ${id}`,
+      status: "Estado",
+      createdAt: "Creada",
+      urls: "Páginas vigiladas",
+      noUrls: "Esta alerta no tiene páginas activas.",
+      subscriptions: "Correos de aviso",
+      noSubscriptions: "Esta alerta no tiene correos.",
+    },
+  },
   notice: "La alerta no se puede editar después de guardarla. Antes de crearla te pediremos confirmar.",
   actions: { cancel: "Cancelar", save: "Guardar alerta" },
   errors: {
@@ -102,6 +127,9 @@ export const alertMessages = {
       pages === 1 ? "Vigilaremos 1 página del producto." : `Vigilaremos ${pages} páginas del producto.`,
     notify: (masked: string[]) => `Te avisaremos a ${masked.join(", ")}.`,
     another: "Crear otra alerta",
+    view: "Ver alerta",
     reference: "Referencia",
+    /** US-03-05: la primera captura corre sola; sin progreso en vivo (DEC-31). */
+    background: "La primera captura de precios corre en segundo plano. Recarga la página más tarde para ver el resultado.",
   },
 } as const;

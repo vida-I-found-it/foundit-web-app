@@ -1,0 +1,55 @@
+name: CI
+
+# Validations only: types, tests, build and security scans. No deploy (Render deploys on its own).
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      # pnpm version comes from "packageManager" in package.json (pnpm@11.18.0).
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+
+  codeql:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      actions: read          # CodeQL reads the workflow run before uploading the SARIF
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: javascript-typescript
+      - uses: github/codeql-action/analyze@v3
+
+  secrets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: >
+          docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/repo:ro"
+          ghcr.io/gitleaks/gitleaks:v8.18.4 detect --source /repo --redact --no-banner -v

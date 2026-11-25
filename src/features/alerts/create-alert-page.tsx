@@ -1,4 +1,4 @@
-import { CheckCircle2, Link as LinkIcon, Lock, Mail, Search } from "lucide-react";
+import { CheckCircle2, Clock, Link as LinkIcon, Lock, Mail, Search } from "lucide-react";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 import { PageHeader } from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
@@ -131,6 +131,12 @@ export function CreateAlertPage() {
             <p className="mt-2">{t.success.lead(created.alert.urls.length)}</p>
             {/* US-02-05-AC1: el correo solo se muestra enmascarado. */}
             <p className="mt-1 break-words">{t.success.notify(created.masked)}</p>
+            {/* US-03-05-AC1/AC3: aviso fijo en todo éxito (también si `schedule` falló); role="status" no roba el foco del título. */}
+            <div className="mt-4">
+              <Notice icon={Clock} role="status">
+                {t.success.background}
+              </Notice>
+            </div>
             <p className="mt-3 font-mono text-xs text-muted">
               {t.success.reference}: {created.alert.id}
             </p>

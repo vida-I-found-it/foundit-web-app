@@ -103,5 +103,7 @@ export const alertMessages = {
     notify: (masked: string[]) => `Te avisaremos a ${masked.join(", ")}.`,
     another: "Crear otra alerta",
     reference: "Referencia",
+    /** US-03-05: la primera captura corre sola; sin progreso en vivo (DEC-31). */
+    background: "La primera captura de precios corre en segundo plano. Recarga la página más tarde para ver el resultado.",
   },
 } as const;

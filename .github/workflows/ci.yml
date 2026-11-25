@@ -33,6 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
+      actions: read          # CodeQL reads the workflow run before uploading the SARIF
       contents: read
       security-events: write
     steps:

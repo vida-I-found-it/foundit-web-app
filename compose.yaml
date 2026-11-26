@@ -1,0 +1,36 @@
+# Local environment of foundit-web-app only (INF-2, "solo local").
+# The compose with every piece belongs outside this repo (polyrepo); this one is its building block.
+#
+#   docker compose up -d --build --wait     # http://127.0.0.1:5173
+#
+# The browser (not this container) calls core at VITE_API_BASE_URL, baked in at build time.
+# Start core-service's own compose to have a working API on 127.0.0.1:8000; without it the
+# screens load and show the connection error.
+
+name: foundit-web-app
+
+services:
+  frontend:
+    build:
+      context: .
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://127.0.0.1:8000}
+    image: i-found-it/foundit-web-app:local
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    ports:
+      - "127.0.0.1:5173:5173"  # never 0.0.0.0
+    mem_limit: 128m
+    cpus: 0.5
+    pids_limit: 50
+    networks: [web]
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:5173/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+networks:
+  web: {}

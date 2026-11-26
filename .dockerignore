@@ -1,0 +1,16 @@
+# The build only needs the sources, the configs and the lockfile.
+.env
+.env.*
+!.env.example
+.git
+.github
+.idea
+.vitest
+node_modules
+dist
+coverage
+tests
+deploy
+docs
+compose.yaml
+*.tsbuildinfo

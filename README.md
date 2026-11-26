@@ -1,6 +1,55 @@
-# Vida lo encontre! ( i-found-it-app )
+# 🔎 Vida lo encontre! ( i-found-it-app )
+
+[![CI](https://github.com/vida-I-found-it/foundit-web-app/actions/workflows/ci.yml/badge.svg)](https://github.com/vida-I-found-it/foundit-web-app/actions/workflows/ci.yml)
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)](https://vite.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Vitest](https://img.shields.io/badge/tests-Vitest-6E9F18?logo=vitest&logoColor=white)](https://vitest.dev/)
+[![pnpm](https://img.shields.io/badge/pnpm-11-F69220?logo=pnpm&logoColor=white)](https://pnpm.io/)
+[![Node](https://img.shields.io/badge/node-24-5FA04E?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![Docker](https://img.shields.io/badge/docker-compose-2496ED?logo=docker&logoColor=white)](compose.yaml)
+[![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 
 SPA de visualización de datos para comparar precios de productos y servicios a lo largo del tiempo y detectar ofertas. Dashboard minimalista, accesible y rápido.
+
+## 🎯 Objetivo
+
+Ser la **cara del producto**: que cualquier persona cree una alerta con las páginas de un producto y sus correos, la
+consulte por su número y, más adelante, vea cómo cambió el precio. Es la única pieza que se publica al navegador; todo lo
+demás es privado. No guarda datos ni secretos: habla solo con `core-service` por REST, valida lo que escribe el usuario y
+muestra cada error en lenguaje claro y accesible.
+
+## 🧰 Tecnologías (lo que usa hoy)
+
+| Tecnología | Para qué |
+|---|---|
+| **React 19** + **TypeScript** (strict) | Interfaz por *features* (`landing` y `board`) con tipos estrictos |
+| **Vite 8** | Servidor de desarrollo y build de producción; `VITE_API_BASE_URL` se fija al compilar |
+| **Tailwind CSS 4** | Estilos con tokens de diseño; sin colores sueltos en los componentes |
+| **Recharts** · **Motion** · **lucide-react** | Gráficos, animación opt-in e íconos |
+| **Vitest** + **Testing Library** | Pruebas de componentes y de los clientes REST |
+| **pnpm 11** + **Node 24** | Dependencias con lockfile y entorno fijado en `package.json` |
+| **Docker** + **Compose** | Imagen de dos etapas: compila con pnpm y sirve `dist/` sin root con un servidor estático propio |
+
+La tabla «Stack objetivo» de más abajo es hacia dónde va el proyecto; varias piezas (TanStack, Zustand, Zod, shadcn,
+Biome…) todavía no están instaladas.
+
+## 🐳 Con Docker
+
+```bash
+docker compose up -d --build --wait   # http://127.0.0.1:5173
+docker compose down
+```
+
+- La URL de `core` se fija al construir la imagen (`VITE_API_BASE_URL`, por defecto `http://127.0.0.1:8000`). Es el
+  **navegador** el que llama a `core`, no el contenedor.
+- Para tener una API funcionando, levanta también el compose de `core-service`. Sin él, las pantallas cargan y muestran el
+  error de conexión.
+- [`docker/serve.mjs`](docker/serve.mjs) sirve `dist/` solo con módulos de Node, sin dependencias. Hace lo mismo que
+  `deploy/render/render.yaml`: devuelve `index.html` en las rutas del SPA, guarda en caché los `/assets` (inmutables) y nunca el HTML,
+  añade cabeceras de seguridad, bloquea el *path traversal* y solo acepta `GET` y `HEAD`.
+- Publica solo `127.0.0.1:5173`. Solo lectura, `cap_drop: ALL`, `no-new-privileges` y límites de memoria, CPU y procesos.
 
 ## Vista previa
 
@@ -23,7 +72,7 @@ Demo del landing (datos ficticios):
 - **Animación opt-in**: por defecto solo transiciones CSS cortas (150–200 ms). Motion se usa únicamente donde lo decidimos, y todo respeta `prefers-reduced-motion`.
 - **Accesible por defecto**: WCAG AA como mínimo, verificado de forma automática en CI.
 
-### Stack
+### Stack objetivo
 
 | Capa | Elección |
 |---|---|
